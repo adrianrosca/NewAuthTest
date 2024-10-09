@@ -1,0 +1,22 @@
+﻿<Window x:Class="WpfClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="New Auth Test"  Width="800" Height="600"
+        WindowStartupLocation="CenterScreen"
+        Loaded="OnLoad">
+    
+    <DockPanel>
+        <!-- Menu with a direct Authenticate button -->
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Authenticate" Click="AuthenticateMenuItem_Click"/>
+        </Menu>
+
+        <!-- RichTextBox filling the remaining space -->
+        <RichTextBox Name="ProgressTextBox" 
+                     VerticalAlignment="Stretch"
+                     HorizontalAlignment="Stretch"
+                     IsReadOnly="True"
+                     VerticalScrollBarVisibility="Auto"
+                     Margin="10"/>
+    </DockPanel>
+</Window>
