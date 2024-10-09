@@ -39,3 +39,29 @@ This will build and launch both the ASP.NET Core backend and the WPF client simu
 
 - The backend listens on `https://localhost:7042`. Ensure the WPF client points to this URL.
 - Logs in the WPF client’s `TextBox` show real-time status and error messages.
+
+## Technologies Used
+
+- .NET 8.0
+- ASP.NET Core
+- WPF
+- Windows Authentication
+- HTTP Client
+
+## Comparison gRPC and HTTP Client
+
+This project uses HTTP Client for communication between the WPF client and the ASP.NET Core backend.
+gRPC could be used instead, it has good performance and Protobuf serialization.
+
+| Feature               | gRPC                                           | HTTP Client                                      |
+|-----------------------|------------------------------------------------|--------------------------------------------------|
+| **Protocol**          | HTTP/2 with Protocol Buffers                   | HTTP/1.1 (typically) with JSON/XML               |
+| **Serialization**     | Protocol Buffers (binary, compact)             | JSON/XML (human-readable, less compact)          |
+| **Performance**       | High performance, low latency                  | Moderate performance, dependent on JSON/XML      |
+| **Setup Complexity**  | Requires `.proto` files and gRPC service setup | Simple setup with REST API endpoints             |
+| **Compatibility**     | Primarily backend-to-backend, limited in browsers | Broad compatibility across platforms and browsers |
+| **Error Handling**    | Richer error handling with status codes        | Standard HTTP status codes                       |
+| **Streaming Support** | Supports bi-directional streaming              | Limited, typically unidirectional (server to client) |
+| **Use Cases**         | Real-time, low-latency applications            | Standard web APIs, general-purpose communication |
+
+
