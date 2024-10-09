@@ -48,7 +48,7 @@ This will build and launch both the ASP.NET Core backend and the WPF client simu
 - Windows Authentication
 - HTTP Client
 
-## Comparison gRPC and HTTP Client
+## gRPC vs HTTP Client
 
 This project uses HTTP Client for communication between the WPF client and the ASP.NET Core backend.
 gRPC could be used instead, it has good performance and Protobuf serialization.
