@@ -64,4 +64,19 @@ gRPC could be used instead, it has good performance and Protobuf serialization.
 | **Streaming Support** | Supports bi-directional streaming              | Limited, typically unidirectional (server to client) |
 | **Use Cases**         | Real-time, low-latency applications            | Standard web APIs, general-purpose communication |
 
+## SID
 
+| SID                                      | Group Name                                      | Description |
+|------------------------------------------|-------------------------------------------------|-------------|
+| **S-1-5-32-544**                         | BUILTIN\Administrators                          | Local Administrators group. Members have administrative privileges on the machine. |
+| **S-1-1-0**                              | Everyone                                        | Represents all users. All logged-on users are members of this group. |
+| **S-1-5-114**                            | Local account and member of Administrators group| Identifies accounts that are both local and members of the Administrators group. |
+| **S-1-5-32-545**                         | BUILTIN\Users                                   | Local Users group. Members are standard users with limited privileges. |
+| **S-1-5-4**                              | NT AUTHORITY\INTERACTIVE                        | Represents users who log on interactively. |
+| **S-1-2-1**                              | CONSOLE LOGON                                   | Refers to users logged in through the console, such as directly on the physical machine. |
+| **S-1-5-11**                             | NT AUTHORITY\Authenticated Users                | Includes all users authenticated on the machine. |
+| **S-1-5-15**                             | NT AUTHORITY\This Organization                  | Used by users authenticated by the organization. |
+| **S-1-11-96...**                         | MicrosoftAccount\<email>                        | Represents a user authenticated with a Microsoft Account. This SID is specific to the user’s Microsoft account. |
+| **S-1-5-113**                            | NT AUTHORITY\Local account                      | Identifies accounts that are local to the machine (non-domain). |
+| **S-1-2-0**                              | LOCAL                                           | Represents the machine’s local account (as opposed to network-based users). |
+| **S-1-5-64-36**                          | NT AUTHORITY\Cloud Account Authentication       | Refers to users authenticated with cloud-based identity, such as Azure AD or Microsoft Accounts. |
