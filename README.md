@@ -52,17 +52,21 @@ gRPC could be used instead, it has good performance and Protobuf serialization.
 
 ## SID
 
-| SID                                      | Group Name                                      | Description |
-|------------------------------------------|-------------------------------------------------|-------------|
-| **S-1-5-32-544**                         | BUILTIN\Administrators                          | Local Administrators group. Members have administrative privileges on the machine. |
-| **S-1-1-0**                              | Everyone                                        | Represents all users. All logged-on users are members of this group. |
-| **S-1-5-114**                            | Local account and member of Administrators group| Identifies accounts that are both local and members of the Administrators group. |
-| **S-1-5-32-545**                         | BUILTIN\Users                                   | Local Users group. Members are standard users with limited privileges. |
-| **S-1-5-4**                              | NT AUTHORITY\INTERACTIVE                        | Represents users who log on interactively. |
-| **S-1-2-1**                              | CONSOLE LOGON                                   | Refers to users logged in through the console, such as directly on the physical machine. |
-| **S-1-5-11**                             | NT AUTHORITY\Authenticated Users                | Includes all users authenticated on the machine. |
-| **S-1-5-15**                             | NT AUTHORITY\This Organization                  | Used by users authenticated by the organization. |
-| **S-1-11-96...**                         | MicrosoftAccount\<email>                        | Represents a user authenticated with a Microsoft Account. This SID is specific to the user’s Microsoft account. |
-| **S-1-5-113**                            | NT AUTHORITY\Local account                      | Identifies accounts that are local to the machine (non-domain). |
-| **S-1-2-0**                              | LOCAL                                           | Represents the machine’s local account (as opposed to network-based users). |
-| **S-1-5-64-36**                          | NT AUTHORITY\Cloud Account Authentication       | Refers to users authenticated with cloud-based identity, such as Azure AD or Microsoft Accounts. |
+<style>
+.nowrap { white-space: nowrap; }
+</style>
+
+| SID                                   | Group Name                                      | Description |
+|---------------------------------------|-------------------------------------------------|-------------|
+| <span class="nowrap">**S-1-5-32-544**</span> | BUILTIN\Administrators                          | Local Administrators group. Members have administrative privileges on the machine. |
+| <span class="nowrap">**S-1-1-0**</span>      | Everyone                                        | Represents all users. All logged-on users are members of this group. |
+| <span class="nowrap">**S-1-5-114**</span>    | Local account and member of Administrators group| Identifies accounts that are both local and members of the Administrators group. |
+| <span class="nowrap">**S-1-5-32-545**</span> | BUILTIN\Users                                   | Local Users group. Members are standard users with limited privileges. |
+| <span class="nowrap">**S-1-5-4**</span>      | NT AUTHORITY\INTERACTIVE                        | Represents users who log on interactively. |
+| <span class="nowrap">**S-1-2-1**</span>      | CONSOLE LOGON                                   | Refers to users logged in through the console, such as directly on the physical machine. |
+| <span class="nowrap">**S-1-5-11**</span>     | NT AUTHORITY\Authenticated Users                | Includes all users authenticated on the machine. |
+| <span class="nowrap">**S-1-5-15**</span>     | NT AUTHORITY\This Organization                  | Used by users authenticated by the organization. |
+| <span class="nowrap">**S-1-11-96...**</span> | MicrosoftAccount\<email>                        | Represents a user authenticated with a Microsoft Account. This SID is specific to the user’s Microsoft account. |
+| <span class="nowrap">**S-1-5-113**</span>    | NT AUTHORITY\Local account                      | Identifies accounts that are local to the machine (non-domain). |
+| <span class="nowrap">**S-1-2-0**</span>      | LOCAL                                           | Represents the machine’s local account (as opposed to network-based users). |
+| <span class="nowrap">**S-1-5-64-36**</span>  | NT AUTHORITY\Cloud Account Authentication       | Refers to users authenticated with cloud-based identity, such as Azure AD or Microsoft Accounts. |
