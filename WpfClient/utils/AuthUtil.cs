@@ -26,11 +26,21 @@ namespace WpfClient
 
         // retrieves data from the specified endpoint
         // -------------------------------------------------------------
-        private static async Task<string> GetDataAsync(HttpClient httpClient, string endpoint)
+        public static async Task<string> GetDataAsync(HttpClient httpClient, string endpoint, RichTextBox logRichTextBox)
         {
+            LogUtil.AddLogs(logRichTextBox, false, $"Sending GET request to: {endpoint}");
+            
             var response = await httpClient.GetAsync(endpoint);
+            
+            LogUtil.AddLogs(logRichTextBox, false, $"Received response. Status: {response.StatusCode}");
+            
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
+            
+            var content = await response.Content.ReadAsStringAsync();
+            
+            LogUtil.AddLogs(logRichTextBox, false, $"Retrieved content. Length: {content.Length} characters");
+            
+            return content;
         }
 
 
@@ -52,7 +62,7 @@ namespace WpfClient
 
             try
             {
-                string content = await GetDataAsync(AuthUtil.HttpClient, endpoint);
+                string content = await GetDataAsync(HttpClient, endpoint, logRichTextBox);
 
                 if (LogUtil.IsHtmlResponse(content))
                 {
