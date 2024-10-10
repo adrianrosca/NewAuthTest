@@ -1,144 +1,71 @@
-using System;
-using System.Collections.Generic;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Security.Principal;
-using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Media;
 
 namespace WpfClient
 {
+    // handles authentication operations
+    // ------------------------------------------------------------------------------------------
     public static class AuthUtil
     {
-        private static readonly HttpClient httpClient = new HttpClient(new HttpClientHandler
+        private static readonly HttpClient httpClient = new HttpClient(new HttpClientHandler { UseDefaultCredentials = true });
+
+        // retrieves windows identity information
+        // -------------------------------------------------------------
+        public static WindowsIdentity GetCurrentWindowsIdentity() => WindowsIdentity.GetCurrent();
+
+        // checks if user is in a specific role
+        // -------------------------------------------------------------
+        public static bool IsUserInRole(WindowsIdentity identity, WindowsBuiltInRole role) =>
+            new WindowsPrincipal(identity).IsInRole(role);
+
+        // http client instance
+        // -------------------------------------------------------------
+        public static HttpClient HttpClient => httpClient;
+
+        // retrieves data from the specified endpoint
+        // -------------------------------------------------------------
+        private static async Task<string> GetDataAsync(HttpClient httpClient, string endpoint)
         {
-            UseDefaultCredentials = true  // Enables Windows Authentication
-        });
+            var response = await httpClient.GetAsync(endpoint);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
+        }
 
 
+        // retrieves secure data and logs actions
+        // -------------------------------------------------------------
         public static async Task GetSecureDataAsync(RichTextBox logRichTextBox, WebBrowser htmlViewer)
         {
-            var logs = new List<(string message, bool isSuccess)>();
+            var user = AuthUtil.GetCurrentWindowsIdentity();
+            LogUtil.LogWindowsUserInfo(logRichTextBox, user);
 
-            // Log user info and endpoint setup
-            LogWindowsUserInfo(logs);
+            LogUtil.AddLogs(logRichTextBox, false,
+                "Connecting to the secure endpoint...",
+                "Using Windows credentials for authentication..."
+            );
 
-            logs.Add(("Connecting to the secure endpoint...", false));
-            logs.Add(("Using Windows credentials for authentication...", false));
-
-            // Retrieve endpoint from config
             int port = ConfigUtil.GetServicePort();
             string endpoint = $"http://localhost:{port}/BasicHttp";
-            logs.Add(($"Connecting to endpoint {endpoint}", false));
+            LogUtil.AddLogs(logRichTextBox, false, $"Connecting to endpoint {endpoint}");
 
             try
             {
-                // Send request to secure endpoint
-                var response = await httpClient.GetAsync(endpoint);
-                string content = await response.Content.ReadAsStringAsync();
+                string content = await GetDataAsync(AuthUtil.HttpClient, endpoint);
 
-                if (IsHtmlResponse(content))
+                if (LogUtil.IsHtmlResponse(content))
                 {
-                    // Wrap content in HTML tags if not already present
-                    if (!content.StartsWith("<!DOCTYPE html>", StringComparison.OrdinalIgnoreCase) &&
-                        !content.StartsWith("<html", StringComparison.OrdinalIgnoreCase))
-                    {
-                        content = $"<!DOCTYPE html><html><body>{content}</body></html>";
-                    }
+                    string validHtml = LogUtil.EnsureValidHtml(content);
+                    htmlViewer.NavigateToString(validHtml);
+                }
 
-                    // Display formatted HTML content in WebBrowser directly
-                    htmlViewer.NavigateToString(content);
-                }
-                
-                if (response.IsSuccessStatusCode)
-                {
-                    logs.Add(("Authentication successful: Data retrieved successfully.", true));
-                }
-                else
-                {
-                    logs.Add(($"Error: Server returned status code {response.StatusCode}", false));
-                }
+                LogUtil.AddLogs(logRichTextBox, true, "Authentication successful: Data retrieved successfully.");
             }
             catch (Exception ex)
             {
-                logs.Add(($"Error: {ex.Message}", false));
-                AppendExceptionDetails(logs, ex);
-            }
-
-            // Update logRichTextBox with all logs in color
-            DisplayLogs(logRichTextBox, logs);
-        }
-
-        private static bool IsHtmlResponse(string content)
-        {
-            return 
-                content.StartsWith("<?xml", StringComparison.OrdinalIgnoreCase) ||
-                content.StartsWith("<!DOCTYPE html>", StringComparison.OrdinalIgnoreCase) ||
-                content.StartsWith("<html", StringComparison.OrdinalIgnoreCase);
-        }
-
-        private static void LogWindowsUserInfo(List<(string message, bool isSuccess)> logs)
-        {
-            var user = WindowsIdentity.GetCurrent();
-            if (user != null)
-            {
-                logs.Add(("Windows User Information:", false));
-                logs.Add(($"Username: {user.Name}", false));
-                logs.Add(($"Is Authenticated: {user.IsAuthenticated}", false));
-                logs.Add(($"Authentication Type: {user.AuthenticationType ?? "N/A"}", false));
-                logs.Add(($"User SID: {user.User?.Value ?? "N/A"}", false));
-
-                var principal = new WindowsPrincipal(user);
-                logs.Add(($"Is Admin: {principal.IsInRole(WindowsBuiltInRole.Administrator)}", false));
-                logs.Add(($"Is Guest: {principal.IsInRole(WindowsBuiltInRole.Guest)}", false));
-
-                logs.Add(("User Groups:", false));
-                foreach (var group in user.Groups)
-                {
-                    try
-                    {
-                        var groupName = group.Translate(typeof(NTAccount))?.ToString() ?? "Unknown";
-                        logs.Add(($"Group: {groupName} (SID: {group.Value})", false));
-                    }
-                    catch
-                    {
-                        logs.Add(($"Group SID: {group.Value} (Translation failed)", false));
-                    }
-                }
-            }
-            else
-            {
-                logs.Add(("No Windows user information available.", false));
-            }
-        }
-
-        private static void AppendExceptionDetails(List<(string message, bool isSuccess)> logs, Exception ex)
-        {
-            while (ex != null)
-            {
-                logs.Add(($"Exception: {ex.Message}", false));
-                ex = ex.InnerException;
-            }
-        }
-
-        private static void DisplayLogs(RichTextBox logRichTextBox, List<(string message, bool isSuccess)> logs)
-        {
-            logRichTextBox.Document.Blocks.Clear();
-            foreach (var log in logs)
-            {
-                var paragraph = new Paragraph
-                {
-                    Margin = new System.Windows.Thickness(0)  // Removes extra space between lines
-                };
-
-                var run = new Run($"{DateTime.Now:HH:mm:ss}: {log.message}")
-                {
-                    Foreground = log.isSuccess ? Brushes.Green : (log.message.StartsWith("Error") ? Brushes.Red : Brushes.Black)
-                };
-
-                paragraph.Inlines.Add(run);
-                logRichTextBox.Document.Blocks.Add(paragraph);
+                LogUtil.AddLogs(logRichTextBox, false, $"Error: {ex.Message}");
+                LogUtil.AppendExceptionDetails(logRichTextBox, ex);
             }
         }
     }

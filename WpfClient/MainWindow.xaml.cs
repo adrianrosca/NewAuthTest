@@ -10,12 +10,23 @@ namespace WpfClient
         public MainWindow()
         {
             InitializeComponent();
+            logTextBox.Document.Blocks.Clear();
             Loaded += MainWindow_Loaded;
         }
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            await AuthUtil.GetSecureDataAsync(logRichTextBox, htmlViewer);
+            await RefreshDataAsync();
+        }
+
+        private async void RefreshMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            await RefreshDataAsync();
+        }
+
+        private async Task RefreshDataAsync()
+        {
+            await AuthUtil.GetSecureDataAsync(logTextBox, htmlViewer);
         }
     }
 }

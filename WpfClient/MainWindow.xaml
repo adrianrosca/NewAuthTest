@@ -5,16 +5,23 @@
         WindowState="Maximized"
         Title="Service Viewer" Width="1400" Height="700">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" /> <!-- Log Panel -->
-            <ColumnDefinition Width="1*" /> <!-- HTML Viewer Panel -->
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
 
-        <!-- Log Output Panel -->
-        <RichTextBox x:Name="logRichTextBox" Grid.Column="0" 
+        <Menu Grid.Row="0" Grid.ColumnSpan="2">
+            <MenuItem Header="Authenticate" Click="RefreshMenuItem_Click"/>
+        </Menu>
+
+        <RichTextBox x:Name="logTextBox" Grid.Row="1" Grid.Column="0" 
                      IsReadOnly="True" VerticalScrollBarVisibility="Auto"/>
 
-        <!-- HTML Viewer Panel -->
-        <WebBrowser x:Name="htmlViewer" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <WebBrowser x:Name="htmlViewer" Grid.Row="1" Grid.Column="1" 
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
     </Grid>
 </Window>
