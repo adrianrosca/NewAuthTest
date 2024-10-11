@@ -28,17 +28,14 @@ namespace WpfClient
         // -------------------------------------------------------------
         public static async Task<string> GetDataAsync(HttpClient httpClient, string endpoint, RichTextBox logRichTextBox)
         {
-            LogUtil.AddLogs(logRichTextBox, false, $"Sending GET request to: {endpoint}");
+            LogUtil.Add(logRichTextBox, false, $"Sending GET request to: {endpoint}");
             
-            var response = await httpClient.GetAsync(endpoint);
+            var response = await httpClient.GetAsync(endpoint);            
+            LogUtil.Add(logRichTextBox, false, $"Received response. Status: {response.StatusCode}");
             
-            LogUtil.AddLogs(logRichTextBox, false, $"Received response. Status: {response.StatusCode}");
-            
-            response.EnsureSuccessStatusCode();
-            
-            var content = await response.Content.ReadAsStringAsync();
-            
-            LogUtil.AddLogs(logRichTextBox, false, $"Retrieved content. Length: {content.Length} characters");
+            response.EnsureSuccessStatusCode();            
+            var content = await response.Content.ReadAsStringAsync();            
+            LogUtil.Add(logRichTextBox, false, $"Retrieved content. Length: {content.Length} characters");
             
             return content;
         }
@@ -51,14 +48,14 @@ namespace WpfClient
             var user = AuthUtil.GetCurrentWindowsIdentity();
             LogUtil.LogWindowsUserInfo(logRichTextBox, user);
 
-            LogUtil.AddLogs(logRichTextBox, false,
+            LogUtil.Add(logRichTextBox, false,
                 "Connecting to the secure endpoint...",
                 "Using Windows credentials for authentication..."
             );
 
             int port = ConfigUtil.GetServicePort();
             string endpoint = $"http://localhost:{port}/BasicHttp";
-            LogUtil.AddLogs(logRichTextBox, false, $"Connecting to endpoint {endpoint}");
+            LogUtil.Add(logRichTextBox, false, $"Connecting to endpoint {endpoint}");
 
             try
             {
@@ -70,11 +67,11 @@ namespace WpfClient
                     htmlViewer.NavigateToString(validHtml);
                 }
 
-                LogUtil.AddLogs(logRichTextBox, true, "Authentication successful: Data retrieved successfully.");
+                LogUtil.Add(logRichTextBox, true, "Authentication successful: Data retrieved successfully.");
             }
             catch (Exception ex)
             {
-                LogUtil.AddLogs(logRichTextBox, false, $"Error: {ex.Message}");
+                LogUtil.Add(logRichTextBox, false, $"Error: {ex.Message}");
                 LogUtil.AppendExceptionDetails(logRichTextBox, ex);
             }
         }

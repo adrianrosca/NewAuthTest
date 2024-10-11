@@ -12,8 +12,8 @@ namespace WpfClient
     public static class LogUtil
     {
         // adds multiple log entries to the richtextbox
-        // -------------------------------------------------------------
-        public static void AddLogs(RichTextBox logRichTextBox, bool isSuccess, params string[] messages)
+        // --------------------------------------------
+        public static void Add(RichTextBox logRichTextBox, bool isSuccess, params string[] messages)
         {
             foreach (var message in messages)
             {
@@ -31,16 +31,16 @@ namespace WpfClient
         }
 
         // logs windows user information
-        // -------------------------------------------------------------
+        // -----------------------------
         public static void LogWindowsUserInfo(RichTextBox logRichTextBox, WindowsIdentity user)
         {
             if (user == null)
             {
-                AddLogs(logRichTextBox, false, "No Windows user information available.");
+                Add(logRichTextBox, false, "No Windows user information available.");
                 return;
             }
 
-            AddLogs(logRichTextBox, false,
+            Add(logRichTextBox, false,
                 "## Windows User Information",
                 $"Username: {user.Name}",
                 $"Is Authenticated: {user.IsAuthenticated}",
@@ -57,21 +57,22 @@ namespace WpfClient
                 try
                 {
                     var groupName = group.Translate(typeof(NTAccount))?.ToString() ?? "Unknown";
-                    AddLogs(logRichTextBox, false, $"Group: {groupName} (SID: {group.Value})");
+                    Add(logRichTextBox, false, $"Group: {groupName} (SID: {group.Value})");
                 }
                 catch
                 {
-                    AddLogs(logRichTextBox, false, $"Group SID: {group.Value} (Translation failed)");
+                    Add(logRichTextBox, false, $"Group SID: {group.Value} (Translation failed)");
                 }
             }
-            AddLogs(logRichTextBox, false, "----------");
+
+            Add(logRichTextBox, false, "----------");
         }
 
         // appends exception details to the log
-        // -------------------------------------------------------------
+        // ------------------------------------
         public static void AppendExceptionDetails(RichTextBox logRichTextBox, Exception ex)
         {
-            AddLogs(logRichTextBox, false,
+            Add(logRichTextBox, false,
                 "Exception Details:",
                 $"Type: {ex.GetType().FullName}",
                 $"Message: {ex.Message}",
@@ -81,13 +82,13 @@ namespace WpfClient
 
             if (ex.InnerException != null)
             {
-                AddLogs(logRichTextBox, false, "Inner Exception:");
+                Add(logRichTextBox, false, "Inner Exception:");
                 AppendExceptionDetails(logRichTextBox, ex.InnerException);
             }
         }
 
         // checks if content is html
-        // -------------------------------------------------------------
+        // -------------------------
         public static bool IsHtmlResponse(string content)
         {
             return content.StartsWith("<?xml", StringComparison.OrdinalIgnoreCase) ||
@@ -96,7 +97,7 @@ namespace WpfClient
         }
 
         // ensures content is valid html
-        // -------------------------------------------------------------
+        // -----------------------------
         public static string EnsureValidHtml(string content)
         {
             return content.StartsWith("<!DOCTYPE html>", StringComparison.OrdinalIgnoreCase) ||
