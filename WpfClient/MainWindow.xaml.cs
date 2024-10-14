@@ -21,6 +21,7 @@ namespace WpfClient
 
         private async void RefreshMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            logTextBox.Document.Blocks.Clear();
             await RefreshDataAsync();
         }
 
