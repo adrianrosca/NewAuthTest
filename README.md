@@ -30,6 +30,7 @@ This will build and launch both the ASP.NET Core backend and the WPF client simu
 
 - .NET 8.0
 - ASP.NET Core
+- coreWCF
 - WPF
 - Windows Authentication
 - HTTP Client
